@@ -64,8 +64,6 @@ const PropertyDetails = ({ propertyDetails: { price, rentFrequency, rooms, title
 
 export default PropertyDetails;
 
-import { fetchApi, baseUrl } from "@utils/FetchApi";
-
 export async function getServerSideProps({ params: { id } }) {
     // Fetch a list of properties to ensure the externalID is valid
     const validIDs = await fetchApi(`${baseUrl}/properties/list`, {
