@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import { Box, Flex, Text, Avatar, Spacer } from '@chakra-ui/react';
 import { FaBed, FaBath } from 'react-icons/fa';
 import { BsGridFill } from 'react-icons/bs';
@@ -12,19 +10,20 @@ export default async function PropertyDetails({ params }) {
     const { id } = params;
 
     // Fetch a list of properties to ensure the externalID is valid
-    const validIDs = await fetchApi(`${baseUrl}/properties/list`, {
-        params: {
-            locationExternalIDs: '5002', // Example location ID, adjust as needed
-            purpose: 'for-sale', // or 'for-rent' based on your use case
-            hitsPerPage: '10',
-            page: '0',
-        }
-    })
-    .then(response => response.hits.map(property => property.externalID))
-    .catch(error => {
+    let validIDs = [];
+    try {
+        const response = await fetchApi(`${baseUrl}/properties/list`, {
+            params: {
+                locationExternalIDs: '5002', // Example location ID, adjust as needed
+                purpose: 'for-sale', // or 'for-rent' based on your use case
+                hitsPerPage: '10',
+                page: '0',
+            }
+        });
+        validIDs = response.hits.map(property => property.externalID);
+    } catch (error) {
         console.error('Error fetching valid externalIDs:', error);
-        return [];
-    });
+    }
 
     // Check if the provided id is in the list of valid externalIDs
     if (!validIDs.includes(id)) {
